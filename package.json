@@ -8,10 +8,10 @@
   },
   "scripts": {
     "test": "TODO",
-    "start": "NODE_ENV=production ./node_modules/.bin/babel src --out-dir lib --watch",
-    "build": "NODE_ENV=production ./node_modules/.bin/babel src --out-dir lib",
-    "example": "npm run build && ./bin/chrome-extension run ./example/manifest.json -o ./build",
-    "example:build": "npm run build && ./bin/chrome-extension build ./example/manifest.json -o ./release",
+    "start": "NODE_ENV=production babel src --out-dir lib --watch",
+    "build": "NODE_ENV=production babel src --out-dir lib",
+    "example": "babel-node ./bin/chrome-extension run ./example/manifest.json -o ./build",
+    "example:build": "babel-node ./bin/chrome-extension build ./example/manifest.json -o ./release",
     "prepublish": "npm run build"
   },
   "keywords": [
