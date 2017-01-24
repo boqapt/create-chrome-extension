@@ -11,6 +11,8 @@ class MissingOptionError extends Error {
  * Generic settings
  */
 
+let cmdValue;
+
 commander
 .version(pckg.version)
 
@@ -21,7 +23,10 @@ applyOptions(
   commander
     .command('run <manifest>')
     .description('run extension in development environment')
-).action(runHandler);
+).action((manifest, options) => {
+  cmdValue = 'run';
+  runHandler(manifest, options);
+});
 
 /**
  * Build command
@@ -30,12 +35,20 @@ applyOptions(
   commander
     .command('build <manifest>')
     .description('build extension for distribution')
-).action(buildHandler);
+).action((manifest, options) => {
+  cmdValue = 'build';
+  buildHandler(manifest, options);
+});
 
 /**
  * Start it!
  */
 commander.parse(process.argv);
+
+if (typeof cmdValue === 'undefined') {
+   commander.outputHelp();
+   process.exit(1);
+}
 
 /**
  * Wrap command with common options
