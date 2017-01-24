@@ -1,8 +1,6 @@
 import webpack from 'webpack';
-import precss from 'precss';
 import autoprefixer from 'autoprefixer';
 
-import * as Remove from '../utils/remove';
 import ManifestPlugin from '../manifest/plugin';
 
 // NOTE: Style preprocessors

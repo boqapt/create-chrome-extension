@@ -1,4 +1,4 @@
-import Module from 'module';
+// import Module from 'module';
 
 export default function easyRequire (callback) {
   // const originalRequire = Module.prototype.require

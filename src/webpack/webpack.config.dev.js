@@ -1,9 +1,7 @@
 import webpack from 'webpack';
-import precss from 'precss';
 import autoprefixer from 'autoprefixer';
 import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin';
 
-import * as Remove from '../utils/remove';
 import ManifestPlugin from '../manifest/plugin';
 
 // NOTE: Style preprocessors

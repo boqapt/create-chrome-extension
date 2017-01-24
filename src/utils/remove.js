@@ -8,7 +8,7 @@ export function path (filepath) {
   return split[split.length - 1];
 }
 
-export function all (filepath) {
+export function all (filepath) {
   return extension(path(filepath));
 }
 

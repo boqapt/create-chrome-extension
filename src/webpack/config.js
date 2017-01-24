@@ -1,9 +1,7 @@
 import webpack from 'webpack';
-import combineLoaders from 'webpack-combine-loaders';
 import precss from 'precss';
 import autoprefixer from 'autoprefixer';
 
-import * as Remove from '../utils/remove';
 import ManifestPlugin from '../manifest/plugin';
 
 // NOTE: Style preprocessors
@@ -28,7 +26,8 @@ function makeStyleLoaders () {
 }
 
 function config (Manifest) {
-  const isDevelopment = process.env.NODE_ENV == 'development' || true;
+  const isDevelopment = process.env.NODE_ENV === 'development' || true;
+  const exclude = {};
 
   return {
     // /// Lowlevel config
