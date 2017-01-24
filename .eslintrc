@@ -1,0 +1,16 @@
+{
+  "extends": ["semistandard"],
+  "parser": "babel-eslint",
+  "env": {
+    "node": true
+  },
+  "globals": {
+  },
+  "rules": {
+    "curly": ["error", "all"],
+    "no-alert": "error",
+    "no-debugger": "error",
+    "object-curly-spacing": ["error", "always"],
+    "object-property-newline": 0
+  }
+}

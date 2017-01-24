@@ -1,9 +1,9 @@
 import webpack from 'webpack';
-import precss from 'precss'
-import autoprefixer from 'autoprefixer'
+import precss from 'precss';
+import autoprefixer from 'autoprefixer';
 
-import * as Remove from '../utils/remove'
-import ManifestPlugin from '../manifest/plugin'
+import * as Remove from '../utils/remove';
+import ManifestPlugin from '../manifest/plugin';
 
 // NOTE: Style preprocessors
 // If you want to use any of style preprocessor, add related npm package + loader and uncomment following line
@@ -13,11 +13,11 @@ const styleLoaders = {
   'scss|sass': 'sass-loader'
 };
 
-function makeStyleLoaders() {
-  return Object.keys(styleLoaders).map(function(ext) {
+function makeStyleLoaders () {
+  return Object.keys(styleLoaders).map(function (ext) {
     // TODO: Autoprefixer just for webkit. You can guess why :D
-    var prefix = 'css-loader?sourceMap&root=../assets'
-    var loader = 'style-loader!' + prefix + '!' + styleLoaders[ext];;
+    var prefix = 'css-loader?sourceMap&root=../assets';
+    var loader = 'style-loader!' + prefix + '!' + styleLoaders[ext];
 
     return {
       test: new RegExp('\\.(' + ext + ')$'),
@@ -29,7 +29,7 @@ function makeStyleLoaders() {
 // This is the production configuration.
 // It compiles slowly and is focused on producing a fast and minimal bundle.
 // The development configuration is different and lives in a separate file.
-module.exports = function(Manifest) {
+module.exports = function (Manifest) {
   return {
     // Don't attempt to continue if there are any errors.
     bail: true,
@@ -70,8 +70,8 @@ module.exports = function(Manifest) {
           query: {
             babelrc: false,
             cacheDirectory: true,
-            plugins: [ "transform-decorators-legacy" ],
-            presets: [ "react", "es2015", "es2016", "es2017", "stage-0" ]
+            plugins: [ 'transform-decorators-legacy' ],
+            presets: [ 'react', 'es2015', 'es2016', 'es2017', 'stage-0' ]
           }
         },
 
@@ -84,27 +84,27 @@ module.exports = function(Manifest) {
 
         {
           test: /\.(ico|jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)/,
-          loader: "url-loader?limit=1000000&name=[name]-[hash].[ext]"
+          loader: 'url-loader?limit=1000000&name=[name]-[hash].[ext]'
         }
       ]
     },
     // We use PostCSS for autoprefixing only.
-    postcss: function() {
+    postcss: function () {
       return [
         autoprefixer({
           browsers: [
             'last 10 Chrome versions'
           ]
-        }),
+        })
       ];
     },
     plugins: [
       new ManifestPlugin(Manifest),
       new webpack.DefinePlugin({
-        "global.GENTLY": false,
-        "process.env.APP_ENV": JSON.stringify(process.env.APP_ENV),
-        "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
-        "process.env.IS_BROWSER": JSON.stringify(process.env.IS_BROWSER)
+        'global.GENTLY': false,
+        'process.env.APP_ENV': JSON.stringify(process.env.APP_ENV),
+        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+        'process.env.IS_BROWSER': JSON.stringify(process.env.IS_BROWSER)
       }),
       // Makes some environment variables available to the JS code, for example:
       // if (process.env.NODE_ENV === 'production') { ... }. See `./env.js`.
@@ -136,5 +136,5 @@ module.exports = function(Manifest) {
       net: 'empty',
       tls: 'empty'
     }
-  }
+  };
 };

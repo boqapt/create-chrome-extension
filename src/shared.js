@@ -1,4 +1,4 @@
-import Manifest from './manifest'
+import Manifest from './manifest';
 
 /**
 * For given manifest path, process everything in it
@@ -6,10 +6,8 @@ import Manifest from './manifest'
 * @param  {String} path Manifest file path
 * @return {Promise(Manifest)}
 */
-export function prepareManifest(options) {
-  return function() {
-    return new Promise((resolve) => {
-      resolve(new Manifest(options))
-    })
-  }
+export function prepareManifest (options) {
+  return new Promise((resolve) => {
+    resolve(new Manifest(options));
+  });
 }

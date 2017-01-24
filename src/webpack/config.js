@@ -1,10 +1,10 @@
 import webpack from 'webpack';
-import combineLoaders from 'webpack-combine-loaders'
-import precss from 'precss'
-import autoprefixer from 'autoprefixer'
+import combineLoaders from 'webpack-combine-loaders';
+import precss from 'precss';
+import autoprefixer from 'autoprefixer';
 
-import * as Remove from '../utils/remove'
-import ManifestPlugin from '../manifest/plugin'
+import * as Remove from '../utils/remove';
+import ManifestPlugin from '../manifest/plugin';
 
 // NOTE: Style preprocessors
 // If you want to use any of style preprocessor, add related npm package + loader and uncomment following line
@@ -14,11 +14,11 @@ const styleLoaders = {
   'scss|sass': 'sass-loader'
 };
 
-function makeStyleLoaders() {
-  return Object.keys(styleLoaders).map(function(ext) {
+function makeStyleLoaders () {
+  return Object.keys(styleLoaders).map(function (ext) {
     // TODO: Autoprefixer just for webkit. You can guess why :D
-    var prefix = 'css-loader?sourceMap&root=../assets'
-    var loader = 'style-loader!' + prefix + '!' + styleLoaders[ext];;
+    var prefix = 'css-loader?sourceMap&root=../assets';
+    var loader = 'style-loader!' + prefix + '!' + styleLoaders[ext];
 
     return {
       test: new RegExp('\\.(' + ext + ')$'),
@@ -27,55 +27,55 @@ function makeStyleLoaders() {
   });
 }
 
-function config(Manifest) {
-  const isDevelopment = process.env.NODE_ENV == "development" || true
+function config (Manifest) {
+  const isDevelopment = process.env.NODE_ENV == 'development' || true;
 
   return {
-    ///// Lowlevel config
+    // /// Lowlevel config
     cache: isDevelopment,
     debug: isDevelopment,
     devtool: isDevelopment ? 'cheap-module-eval-source-map' : '',
     node: { __dirname: true },
 
-    ///// App config
+    // /// App config
 
     // Entry points in your app
     // There we use scripts from your manifest.json
     entry: {},
 
     // Output
-    output: (function() {
+    output: (function () {
       let output = {
         path: Manifest.buildPath,
         filename: '[name].js'
-      }
+      };
 
-      if(isDevelopment) {
+      if (isDevelopment) {
         output = {
           ...output,
           chunkFilename: '[name]-[chunkhash].js',
           publicPath: 'https://localhost:3001/'
-        }
+        };
       }
 
-      return output
+      return output;
     })(),
 
     // Plugins
-    plugins: (function() {
+    plugins: (function () {
       let plugins = [
         new ManifestPlugin(Manifest, isDevelopment),
         new webpack.DefinePlugin({
-          "global.GENTLY": false,
-          "process.env": {
-            APP_ENV:  JSON.stringify(process.env.APP_ENV),
+          'global.GENTLY': false,
+          'process.env': {
+            APP_ENV: JSON.stringify(process.env.APP_ENV),
             NODE_ENV: JSON.stringify(process.env.NODE_ENV),
             IS_BROWSER: true
           }
         })
       ];
 
-      if(isDevelopment) {
+      if (isDevelopment) {
         // Development plugins for hot reload
         plugins = [
           ...plugins,
@@ -83,8 +83,7 @@ function config(Manifest) {
           new webpack.HotModuleReplacementPlugin(),
           // Tell reloader to not reload if there is an error.
           new webpack.NoErrorsPlugin()
-        ]
-
+        ];
       } else {
         // Production plugins for optimizing code
         plugins = [
@@ -104,15 +103,15 @@ function config(Manifest) {
               screw_ie8: true
             }
           }),
-          function() {
-            this.plugin("done", function(stats) {
+          function () {
+            this.plugin('done', function (stats) {
               if (stats.compilation.errors && stats.compilation.errors.length) {
-                console.log(stats.compilation.errors)
-                process.exit(1)
+                console.log(stats.compilation.errors);
+                process.exit(1);
               }
-            })
+            });
           }
-        ]
+        ];
       }
 
       // NOTE: Custom plugins
@@ -143,7 +142,7 @@ function config(Manifest) {
       root: [
         Manifest.src
       ],
-      alias: (function() {
+      alias: (function () {
         // NOTE: Aliasing
         // If you want to override some path with another. Good for importing same version of React across different libraries
         var alias = {
@@ -154,7 +153,7 @@ function config(Manifest) {
           // "immutable$": require.resolve(path.join(__dirname, '../node_modules/immutable')),
           // "react$": require.resolve(path.join(__dirname, '../node_modules/react'))
           // "react-dom$": require.resolve(path.join(__dirname, '../node_modules/react-dom'))
-        }
+        };
 
         return alias;
       })()
@@ -162,7 +161,7 @@ function config(Manifest) {
 
     // Loaders
     module: {
-      loaders: (function() {
+      loaders: (function () {
         var loaders = [
           // Assets
 
@@ -170,22 +169,22 @@ function config(Manifest) {
           {
             test: /\.(png|jpg|jpeg|gif|svg|wav|woff|woff2|ttf|eot)/,
             exclude: exclude,
-            loader: "url-loader?limit=1000000&name=[name]-[hash].[ext]"
+            loader: 'url-loader?limit=1000000&name=[name]-[hash].[ext]'
           },
           // Styles
           ...makeStyleLoaders(),
 
           // Scripts
-          (function() {
+          (function () {
             const base = {
               test: /\.jsx?$/,
               exclude: exclude
-            }
+            };
 
             const babelQuery = {
               cacheDirectory: true,
-              plugins: [ "transform-decorators-legacy" ],
-              presets: [ "react", "es2015", "es2016", "es2017", "stage-0" ]
+              plugins: [ 'transform-decorators-legacy' ],
+              presets: [ 'react', 'es2015', 'es2016', 'es2017', 'stage-0' ]
               // [
               //   [
               //     "target", {
@@ -197,13 +196,13 @@ function config(Manifest) {
               //     }
               //   ]
               // ]
-            }
+            };
 
-            if(isDevelopment) {
+            if (isDevelopment) {
               babelQuery.presets = [
-                "react-hmre",
+                'react-hmre',
                 ...babelQuery.presets
-              ]
+              ];
 
               return {
                 ...base,
@@ -218,13 +217,13 @@ function config(Manifest) {
                 //     query: babelQuery
                 //   }
                 // ])
-              }
+              };
             } else {
               return {
                 ...base,
                 loader: 'babel-loader',
                 query: babelQuery
-              }
+              };
             }
           })(),
 
@@ -232,18 +231,18 @@ function config(Manifest) {
           {
             test: /\.json/,
             exclude: exclude,
-            loader: "json-loader"
+            loader: 'json-loader'
           }
           // NOTE: Add more loaders here
-        ]
+        ];
 
-        return loaders
+        return loaders;
       })()
     },
     postcss: function () {
       return [precss, autoprefixer];
     }
-  }
+  };
 }
 
-export default config
+export default config;

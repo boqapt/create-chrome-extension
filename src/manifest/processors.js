@@ -1,11 +1,10 @@
-import Csp         from './processor/csp'
-import PackageJson from './processor/package_json'
-import Assets      from './processor/assets'
-import Action      from './processor/action'
-import Background  from './processor/background'
-import Content     from './processor/content'
-import Overrides   from './processor/overrides'
-
+import Csp from './processor/csp';
+import PackageJson from './processor/package_json';
+import Assets from './processor/assets';
+import Action from './processor/action';
+import Background from './processor/background';
+import Content from './processor/content';
+import Overrides from './processor/overrides';
 
 const processors = [
   // Fix csp for devel
@@ -22,6 +21,6 @@ const processors = [
   Content,
   // Process overrides
   Overrides
-]
+];
 
-export default processors
+export default processors;

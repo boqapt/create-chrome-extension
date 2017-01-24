@@ -1,7 +1,7 @@
-import fs from 'fs'
-import path from 'path'
-import commander from 'commander'
-import pckg from '../package.json'
+import fs from 'fs';
+import path from 'path';
+import commander from 'commander';
+import pckg from '../package.json';
 
 class MissingOptionError extends Error {
 
@@ -14,7 +14,7 @@ class MissingOptionError extends Error {
 let cmdValue;
 
 commander
-.version(pckg.version)
+.version(pckg.version);
 
 /**
  * Run command
@@ -46,8 +46,8 @@ applyOptions(
 commander.parse(process.argv);
 
 if (typeof cmdValue === 'undefined') {
-   commander.outputHelp();
-   process.exit(1);
+  commander.outputHelp();
+  process.exit(1);
 }
 
 /**
@@ -56,18 +56,18 @@ if (typeof cmdValue === 'undefined') {
  * @param  {Command} commander
  * @return {Command}
  */
-function applyOptions(commander) {
+function applyOptions (commander) {
   return (
     commander
     .option(
       '-c --config <path>',
       'custom webpack config',
-      function(path) {
-        return resolvePath(path, 'config')
+      function (path) {
+        return resolvePath(path, 'config');
       }
     )
     .option('-o --output <path>', 'output directory path')
-  )
+  );
 }
 
 /**
@@ -77,12 +77,12 @@ function applyOptions(commander) {
  * @param  {String|Boolean} option
  * @return {String}
  */
-function resolvePath(pathToResolve, required = false) {
-  if(required && !pathToResolve) {
-    throw new MissingOptionError(`error: missing required option '${required}'`)
+function resolvePath (pathToResolve, required = false) {
+  if (required && !pathToResolve) {
+    throw new MissingOptionError(`error: missing required option '${required}'`);
   }
 
-  return path.resolve(pathToResolve)
+  return path.resolve(pathToResolve);
 }
 
 /**
@@ -91,13 +91,13 @@ function resolvePath(pathToResolve, required = false) {
  * @param  {Command} command
  * @return {Object}
  */
-function processOptions(options) {
-  const output = resolvePath(options.output, 'output')
+function processOptions (options) {
+  const output = resolvePath(options.output, 'output');
 
   return {
     ...options,
     output
-  }
+  };
 }
 
 /**
@@ -107,26 +107,25 @@ function processOptions(options) {
  * @param  {String} manifest
  * @param  {Object} options
  */
-function actionHandler(runner, manifest, options) {
+function actionHandler (runner, manifest, options) {
   try {
     runner({
       ...processOptions(options),
       manifest: path.resolve(manifest)
-    })
-  } catch(ex) {
-    if(ex instanceof MissingOptionError) {
-      console.error(`\n  ${ex.message}\n`)
+    });
+  } catch (ex) {
+    if (ex instanceof MissingOptionError) {
+      console.error(`\n  ${ex.message}\n`);
     } else {
-      throw ex
+      throw ex;
     }
   }
 }
 
-function runHandler(manifest, options) {
-  actionHandler(require('./run'), manifest, options)
+function runHandler (manifest, options) {
+  actionHandler(require('./run'), manifest, options);
 }
 
-
-function buildHandler(manifest, options) {
-  actionHandler(require('./build'), manifest, options)
+function buildHandler (manifest, options) {
+  actionHandler(require('./build'), manifest, options);
 }

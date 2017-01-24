@@ -1,11 +1,11 @@
-import path from 'path'
-import fs from 'fs-extra'
+import path from 'path';
+import fs from 'fs-extra';
 
-import * as log from '../../../utils/log'
+import * as log from '../../../utils/log';
 import * as Remove from '../../../utils/remove';
-import script from './script'
+import script from './script';
 
-const makeLayout = function({script, body}) {
+const makeLayout = function ({ script, body }) {
   return (
 `<!DOCTYPE html>
 <html>
@@ -18,37 +18,37 @@ const makeLayout = function({script, body}) {
     ${script}
   </body>
 </html>`
-  )
-}
+  );
+};
 
-export default function(htmlFilepath, src, build) {
-  log.pending(`Making html '${htmlFilepath}'`)
+export default function (htmlFilepath, src, build) {
+  log.pending(`Making html '${htmlFilepath}'`);
 
   // Read body content
-  const htmlContent = fs.readFileSync(path.resolve(src, htmlFilepath), {encoding: "utf8"})
+  const htmlContent = fs.readFileSync(path.resolve(src, htmlFilepath), { encoding: 'utf8' });
 
   // Get just path and name ie: 'popup/index'
-  const bareFilepath = Remove.extension(htmlFilepath)
+  const bareFilepath = Remove.extension(htmlFilepath);
 
-  const scriptFilepath = `${bareFilepath}.js`
+  const scriptFilepath = `${bareFilepath}.js`;
 
-  const webpackScriptUrl = process.env.NODE_ENV == "development" ? path.join("https://localhost:3001", scriptFilepath) : `/${scriptFilepath}`
+  const webpackScriptUrl = process.env.NODE_ENV == 'development' ? path.join('https://localhost:3001', scriptFilepath) : `/${scriptFilepath}`;
   const webpackScript = `<script src="${webpackScriptUrl}" async defer></script>`;
 
-  script(scriptFilepath, build)
+  script(scriptFilepath, build);
 
   const html = makeLayout({
-    body:   htmlContent,
+    body: htmlContent,
     script: webpackScript
-  })
+  });
 
-  const fullHtmlPath = path.join(build, htmlFilepath)
+  const fullHtmlPath = path.join(build, htmlFilepath);
 
-  fs.mkdirsSync(Remove.file(fullHtmlPath))
+  fs.mkdirsSync(Remove.file(fullHtmlPath));
 
-  fs.writeFileSync(fullHtmlPath, html)
+  fs.writeFileSync(fullHtmlPath, html);
 
-  log.done()
+  log.done();
 
-  return scriptFilepath
+  return scriptFilepath;
 }

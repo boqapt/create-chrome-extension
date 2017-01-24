@@ -1,21 +1,21 @@
-import fs from 'fs-extra'
-import path from 'path'
+import fs from 'fs-extra';
+import path from 'path';
 // import chokidar from 'chokidar'
 
-import processors from './processors'
-import * as log from '../utils/log'
+import processors from './processors';
+import * as log from '../utils/log';
 
 export default class Manifest {
-  constructor(options) {
-    this.path  = options.manifest
-    this.src   = path.dirname(this.path)
-    this.buildPath = options.output
+  constructor (options) {
+    this.path = options.manifest;
+    this.src = path.dirname(this.path);
+    this.buildPath = options.output;
   }
 
-  run() {
-    this.prepareBuildDir()
-    this.processManifest()
-    this.writeManifest()
+  run () {
+    this.prepareBuildDir();
+    this.processManifest();
+    this.writeManifest();
   }
 
   // watch() {
@@ -26,43 +26,43 @@ export default class Manifest {
   //   this.processManifest()
   // }
 
-  prepareBuildDir() {
+  prepareBuildDir () {
     // Prepare clear build
-    fs.removeSync(this.buildPath)
-    fs.mkdirsSync(this.buildPath)
+    fs.removeSync(this.buildPath);
+    fs.mkdirsSync(this.buildPath);
   }
 
-  writeManifest() {
-    const manifestPath = path.join(this.buildPath, "manifest.json");
-    log.pending(`Making 'build/manifest.json'`)
-    fs.writeFileSync(manifestPath, JSON.stringify(this.manifest, null, 2), {encoding: 'utf8'})
-    log.done()
+  writeManifest () {
+    const manifestPath = path.join(this.buildPath, 'manifest.json');
+    log.pending(`Making 'build/manifest.json'`);
+    fs.writeFileSync(manifestPath, JSON.stringify(this.manifest, null, 2), { encoding: 'utf8' });
+    log.done();
   }
 
-  loadManifest() {
-    return JSON.parse(fs.readFileSync(this.path, 'utf8'))
+  loadManifest () {
+    return JSON.parse(fs.readFileSync(this.path, 'utf8'));
   }
 
-  processManifest() {
-    this.scripts = []
-    this.manifest = this.loadManifest()
+  processManifest () {
+    this.scripts = [];
+    this.manifest = this.loadManifest();
 
     // Iterate over each processor and process manifest with it
     processors.forEach((processor) => {
       this.applyProcessorResult(
         processor(this.manifest, this)
-      )
-    })
+      );
+    });
 
-    return true
+    return true;
   }
 
-  applyProcessorResult({manifest, scripts} = {}) {
-    if(manifest) {
-      this.manifest = manifest
+  applyProcessorResult ({ manifest, scripts } = {}) {
+    if (manifest) {
+      this.manifest = manifest;
     }
 
-    if(scripts) {
+    if (scripts) {
       // TODO validace na skripty
       // const pushScriptName = function(scriptName) {
       //   const scriptPath = path.join(paths.src, scriptName)
@@ -80,8 +80,8 @@ export default class Manifest {
       // }
 
       scripts.forEach((script) => {
-        this.scripts.push(script)
-      })
+        this.scripts.push(script);
+      });
     }
   }
 }

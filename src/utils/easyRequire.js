@@ -1,6 +1,6 @@
-import Module from 'module'
+import Module from 'module';
 
-export default function easyRequire(callback) {
+export default function easyRequire (callback) {
   // const originalRequire = Module.prototype.require
   // const originalResolve = Module.prototype.resolve
   //
@@ -14,10 +14,10 @@ export default function easyRequire(callback) {
   //   return originalResolve.apply(this, args)
   // }
 
-  const result = callback()
+  const result = callback();
 
   // Module.prototype.require = originalRequire
   // Module.prototype.resolve = originalResolve
 
-  return result
+  return result;
 }
