@@ -1,5 +1,3 @@
-process.env.NODE_ENV = 'production';
-
 // Native
 import path from 'path';
 import { exec } from 'child_process';
@@ -49,7 +47,7 @@ function makeExtension (options) {
   });
 }
 
-function build (options) {
+function pack (options) {
   options = {
     ...options,
     key: options.key && path.resolve(options.key),
@@ -72,4 +70,4 @@ function build (options) {
   });
 }
 
-module.exports = build;
+module.exports = pack;

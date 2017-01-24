@@ -5,7 +5,7 @@ import * as log from '../../utils/log';
 export default function (manifest) {
   log.pending('Processing CSP');
 
-  if (process.env.NODE_ENV == 'development') {
+  if (process.env.NODE_ENV === 'development') {
     let csp = manifest['content_security_policy'] || '';
 
     const objectSrc = "object-src 'self'";

@@ -11,8 +11,6 @@ const processAsset = function (object, key, src, buildPath) {
 
   log.pending(`Processing asset '${assetPath}'`);
 
-  const buildAssetsDirPath = path.join(buildPath, buildAssetsDir);
-
   const assetSrcPath = path.join(src, assetPath);
   const buildAssetPath = path.join(buildAssetsDir, Remove.path(assetPath));
   const assetDestPath = path.join(buildPath, buildAssetPath);
