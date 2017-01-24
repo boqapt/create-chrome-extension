@@ -1,4 +1,3 @@
-import fs from 'fs';
 import path from 'path';
 import commander from 'commander';
 import pckg from '../package.json';
@@ -41,6 +40,18 @@ applyOptions(
 });
 
 /**
+ * Pack command
+ */
+applyOptions(
+  commander
+    .command('pack <manifest>')
+    .description('pack extension for distribution')
+).action((manifest, options) => {
+  cmdValue = 'pack';
+  packHandler(manifest, options);
+});
+
+/**
  * Start it!
  */
 commander.parse(process.argv);
@@ -59,13 +70,6 @@ if (typeof cmdValue === 'undefined') {
 function applyOptions (commander) {
   return (
     commander
-    .option(
-      '-c --config <path>',
-      'custom webpack config',
-      function (path) {
-        return resolvePath(path, 'config');
-      }
-    )
     .option('-o --output <path>', 'output directory path')
   );
 }
@@ -128,4 +132,8 @@ function runHandler (manifest, options) {
 
 function buildHandler (manifest, options) {
   actionHandler(require('./build'), manifest, options);
+}
+
+function packHandler (manifest, options) {
+  actionHandler(require('./pack'), manifest, options);
 }
