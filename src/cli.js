@@ -46,13 +46,13 @@ commander.parse(process.argv);
 function applyOptions(commander) {
   return (
     commander
-    // .option(
-    //   '-c --config <path>',
-    //   'custom webpack config',
-    //   function(path) {
-    //     resolvePath('config', path)
-    //   }
-    // )
+    .option(
+      '-c --config <path>',
+      'custom webpack config',
+      function(path) {
+        return resolvePath(path, 'config')
+      }
+    )
     .option('-o --output <path>', 'output directory path')
   )
 }
@@ -80,7 +80,6 @@ function resolvePath(pathToResolve, required = false) {
  */
 function processOptions(options) {
   const output = resolvePath(options.output, 'output')
-  // const config = resolvePath(command, 'config')
 
   return {
     ...options,
