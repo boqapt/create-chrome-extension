@@ -1,6 +1,5 @@
 import fs from 'fs-extra';
 import path from 'path';
-// import chokidar from 'chokidar'
 
 import processors from './processors';
 import * as log from '../utils/log';
@@ -12,19 +11,30 @@ export default class Manifest {
     this.buildPath = options.output;
   }
 
+  /**
+   * Return entries as Webpack format
+   *
+   * @return {Object} - Entries for Weback, with shape:
+   *                      {
+   *                        'content/index': 'content/index.js'
+   *                      }
+   */
+  get entries () {
+    return this.scripts
+      .reduce((entries, path) => {
+        const name = path.split('.').slice(0, -1).join('.');
+
+        entries[name] = path;
+
+        return entries;
+      }, {});
+  }
+
   run () {
     this.prepareBuildDir();
     this.processManifest();
     this.writeManifest();
   }
-
-  // watch() {
-  //   chokidar.watch(this.path).on('change', this.onChange)
-  // }
-
-  // onChange = (event, path) => {
-  //   this.processManifest()
-  // }
 
   prepareBuildDir () {
     // Prepare clear build
@@ -63,7 +73,8 @@ export default class Manifest {
     }
 
     if (scripts) {
-      // TODO validace na skripty
+      // TODO validate the scripts
+      //
       // const pushScriptName = function(scriptName) {
       //   const scriptPath = path.join(paths.src, scriptName)
       //

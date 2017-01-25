@@ -12,20 +12,11 @@ const manifest = new ChromeExtensionUtils.Manifest({
 
 manifest.run();
 
-const entries = manifest.scripts
-  .reduce((entries, path) => {
-    const name = path.split('.').slice(0, -1).join('.');
-
-    entries[name] = path;
-
-    return entries;
-  }, {});
-
 module.exports = {
   cache: !true,
   devtool: '#source-map',
 
-  entry: entries,
+  entry: manifest.entries,
   output: {
     path: manifest.buildPath,
     filename: '[name].js',
