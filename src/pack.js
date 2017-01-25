@@ -3,8 +3,10 @@ import path from 'path';
 import { exec } from 'child_process';
 
 // npm
-import color from 'colors/safe';
 import chromeBinaryPath from 'chrome-location';
+import fs from 'fs-extra';
+
+import * as log from './utils/log';
 
 /**
  * Generate extension file inside release path
@@ -16,43 +18,57 @@ function makeExtension (options) {
   const { key, output, release } = options;
 
   return new Promise((resolve, reject) => {
-    console.log(color.yellow(`Building extension into '${release}'`));
+    log.pending(`Moving source files from '${release}' into '${output}'`);
 
-    setTimeout(() => {
-      const commandParts = [`'${chromeBinaryPath}'`, `--pack-extension=${output}`];
-
-      if (key) {
-        commandParts.push(`--pack-extension-key=${key}`);
+    // Move files to sub-directory by using a tmp temporary dir
+    fs.move(release, `${release}_tmp`, (err) => {
+      if (err) {
+        return reject(err);
       }
 
-      const command = `$(${commandParts.join(' ')})`;
-
-      exec(command, (error, stdout, stderr) => {
-        if (stdout) {
-          console.log(color.yellow('stdout: ' + stdout));
+      fs.move(`${release}_tmp`, output, (err) => {
+        if (err) {
+          return reject(err);
         }
 
-        if (stderr) {
-          return reject('stderr: ' + stderr);
-        }
+        log.pending(`Building extension into '${release}'`);
 
-        if (error !== null) {
-          return reject('exec error: ' + stderr);
-        }
+        setTimeout(() => {
+          const commandParts = [`'${chromeBinaryPath}'`, `--pack-extension=${output}`];
 
-        resolve(`Extension builded in '${release}'`);
+          if (key) {
+            commandParts.push(`--pack-extension-key=${key}`);
+          }
+
+          const command = `$(${commandParts.join(' ')})`;
+
+          exec(command, (error, stdout, stderr) => {
+            if (stdout) {
+              log.pending('stdout: ' + stdout);
+            }
+
+            if (stderr) {
+              return reject('stderr: ' + stderr);
+            }
+
+            if (error !== null) {
+              return reject('exec error: ' + stderr);
+            }
+
+            resolve(`Extension builded in '${release}'`);
+          });
+          // Long enought to prevent some unexpected errors
+        }, 1000);
       });
-      // Long enought to prevent some unexpected errors
-    }, 1000);
+    });
   });
 }
 
-function pack (options) {
-  options = {
-    ...options,
-    key: options.key && path.resolve(options.key),
-    release: options.output,
-    output: path.join(options.output, 'source')
+export default function pack (manifest) {
+  const options = {
+    key: manifest.key && path.resolve(manifest.key),
+    release: manifest.buildPath,
+    output: path.join(manifest.buildPath, 'source')
   };
 
   // TODO: check if release directory contain *.key file
@@ -60,14 +76,13 @@ function pack (options) {
   // 1) want to use it as key for build
   // 2) really really really want to override it
   makeExtension(options)
-  // Extension done
-  .then(function (message) {
-    console.log(color.green(message));
-  })
-  // Some error happened
-  .catch(function (error) {
-    console.log(color.red(error.stack || error));
-  });
+    // Extension done
+    .then(function (message) {
+      log.success(message);
+      log.done();
+    })
+    // Some error happened
+    .catch(function (error) {
+      log.error(error.stack || error);
+    });
 }
-
-module.exports = pack;

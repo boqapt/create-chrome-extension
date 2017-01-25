@@ -1,16 +1,16 @@
 import script from './lib/script';
 
 export default function (manifest, { buildPath }) {
-  const { content_scripts } = manifest;
+  const contentScripts = manifest['content_scripts'];
 
-  if (!content_scripts) { return; }
+  if (!contentScripts) { return; }
 
   const scripts = [];
 
-  content_scripts.forEach((content_script = []) => {
+  contentScripts.forEach((contentScript = []) => {
     // TODO content_script can contain css too.
     // Maybe we can be strict, throw error and tell user to add css into scripts and leave it on webpack too
-    content_script.js.forEach((scriptPath) => {
+    contentScript.js.forEach((scriptPath) => {
       script(scriptPath, buildPath);
       scripts.push(scriptPath);
     });

@@ -1,7 +1,12 @@
 import pack from './pack';
-import { prepareManifest } from './shared';
+import Manifest from './manifest';
 
 export default {
   pack,
-  prepareManifest
+  Manifest
+};
+
+module.exports = {
+  pack,
+  Manifest
 };
