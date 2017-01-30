@@ -1,7 +1,7 @@
 import script from './lib/script';
 import html from './lib/html';
 
-export default function (manifest, { buildPath }) {
+export default function (manifest, { buildPath, src }) {
   const { background } = manifest;
 
   // Skip when there is no background property
@@ -19,7 +19,7 @@ export default function (manifest, { buildPath }) {
 
   // Background page
   if (background.page) {
-    scripts.push(html(background.page, buildPath));
+    scripts.push(html(background.page, src, buildPath));
   }
 
   return { manifest, scripts };
