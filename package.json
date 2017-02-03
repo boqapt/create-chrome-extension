@@ -31,6 +31,7 @@
   "dependencies": {
     "chrome-location": "^1.2.1",
     "colors": "1.1.2",
+    "crx": "^3.2.1",
     "findup-sync": "0.4.3",
     "fs-extra": "2.0.0"
   },

@@ -3,10 +3,13 @@ import path from 'path';
 import { exec } from 'child_process';
 
 // npm
+import ChromeExtension from 'crx';
 import chromeBinaryPath from 'chrome-location';
 import fs from 'fs-extra';
 
+
 import * as log from './utils/log';
+
 
 /**
  * Generate extension file inside release path
@@ -64,12 +67,27 @@ function makeExtension (options) {
   });
 }
 
-export default function pack (manifest) {
-  const options = {
-    key: manifest.key && path.resolve(manifest.key),
-    release: manifest.buildPath,
-    output: path.join(manifest.buildPath, 'source')
-  };
+function makeZip (options) {
+  if (!options.zip) {
+    return Promise.resolve(false);
+  }
+
+  const { name } = options;
+  const crx = new ChromeExtension();
+
+  return crx.load(options.output)
+    .then(() => crx.loadContents())
+    .then(archiveBuffer => {
+      fs.writeFile(path.join(options.release, `${name}.zip`), archiveBuffer);
+    });
+}
+
+export default function pack (manifest, options = {}) {
+  options.name = manifest.name;
+  options.key = manifest.key && path.resolve(manifest.key);
+  options.release = manifest.buildPath;
+  options.output = path.join(manifest.buildPath, 'source');
+  options.zip = options.zip || false;
 
   // TODO: check if release directory contain *.key file
   // If yes, then ask user if
@@ -78,8 +96,10 @@ export default function pack (manifest) {
   makeExtension(options)
     // Extension done
     .then(function (message) {
-      log.success(message);
-      log.done();
+      return makeZip(options).then(() => {
+        log.success(message);
+        log.done();
+      });
     })
     // Some error happened
     .catch(function (error) {
