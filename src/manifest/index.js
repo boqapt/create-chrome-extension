@@ -9,8 +9,8 @@ export default class Manifest {
     this.path = options.manifest;
     this.src = path.dirname(this.path);
     this.buildPath = options.output;
-    this.preProcess = options.preProcess || x => x;
-    this.postProcess = options.postProcess || x => x;
+    this.preProcess = options.preProcess || (x => x);
+    this.postProcess = options.postProcess || (x => x);
   }
 
   /**
