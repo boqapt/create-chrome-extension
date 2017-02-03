@@ -83,7 +83,7 @@ function makeZip (options) {
 }
 
 export default function pack (manifest, options = {}) {
-  options.name = manifest.name;
+  options.name = manifest.loadManifest().name;
   options.key = manifest.key && path.resolve(manifest.key);
   options.release = manifest.buildPath;
   options.output = path.join(manifest.buildPath, 'source');
