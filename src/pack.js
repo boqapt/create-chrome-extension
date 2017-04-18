@@ -34,7 +34,7 @@ function makeExtension (options) {
         log.pending(`Building extension into '${release}'`);
 
         setTimeout(() => {
-          const commandParts = [`'${chromeBinaryPath}'`, `--pack-extension=${output}`];
+          const commandParts = [`'${chromeBinaryPath}'`, '--disable-gpu', `--pack-extension=${output}`];
 
           if (key) {
             commandParts.push(`--pack-extension-key=${key}`);
