@@ -9,6 +9,8 @@ export default class Manifest {
     this.path = options.manifest;
     this.src = path.dirname(this.path);
     this.buildPath = options.output;
+    this.preProcess = options.preProcess || (x => x);
+    this.postProcess = options.postProcess || (x => x);
   }
 
   /**
@@ -45,12 +47,12 @@ export default class Manifest {
   writeManifest () {
     const manifestPath = path.join(this.buildPath, 'manifest.json');
     log.pending(`Making 'build/manifest.json'`);
-    fs.writeFileSync(manifestPath, JSON.stringify(this.manifest, null, 2), { encoding: 'utf8' });
+    fs.writeFileSync(manifestPath, JSON.stringify(this.postProcess(this.manifest), null, 2), { encoding: 'utf8' });
     log.done();
   }
 
   loadManifest () {
-    return JSON.parse(fs.readFileSync(this.path, 'utf8'));
+    return this.preProcess(JSON.parse(fs.readFileSync(this.path, 'utf8')));
   }
 
   processManifest () {
